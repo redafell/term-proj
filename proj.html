@@ -56,4 +56,62 @@
         })
     </script>
 </body>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Is it a sin to want more?</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<style>
+    h2{
+        color: antiquewhite;
+    }
+    #myRadarChart{
+        width: 1300px !important;
+        height: 500px !important;
+        margin: auto;
+    }
+</style>
+
+<body style="background-color: rgb(255, 255, 255);">
+    <h2 > The great warrior REDA</h2>
+    <canvas id="myRadarChart"></canvas>
+    <script>
+        var pen = document.getElementById('myRadarChart').getContext('2d')
+    </script>
+    <script>
+        var redar = new Chart(pen,{
+            type: 'radar',
+            data: {
+                labels: ['speed','stamina','strenght','inteligance','luck','charisma'],
+                datasets:[{
+                    label: 'reda',
+                    data:[20,30,80,90,70,30],
+                    backgroundColor: 'rgba(0, 123, 255, 0.2)',
+                    borderColor: '#000000',
+                    borderWidth: 1,
+
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scale:{
+                    r:{
+                        anglelines:{
+                            display: true
+                        },
+                        suggestedmin: 0,
+                        suggestedmax: 100
+
+                    }
+                }
+            }
+
+            
+        })
+    </script>
+</body>
 </html>
