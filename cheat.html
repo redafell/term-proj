@@ -1,116 +1,129 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Custom Radar Chart</title>
+  <meta charset="UTF-8">
+  <title>Radar Chart Character Stats</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     body {
-      background-color: #f0f0f0;
       font-family: sans-serif;
       text-align: center;
+      background: #f0f0f0;
     }
-    h2 { color: #333; }
-    #myRadarChart {
-      width: 600px !important;
-      height: 600px !important;
-      margin: auto;
+    canvas {
+      max-width: 600px;
+      margin: 20px auto;
     }
     form {
-      margin: 20px auto;
-      display: grid;
-      grid-template-columns: repeat(2, max-content);
-      gap: 10px;
-      justify-content: center;
+      margin: 20px;
     }
-    label {
-      text-align: right;
-      padding-right: 5px;
-    }
-    input[type="number"] {
+    input {
+      margin: 5px;
       width: 60px;
     }
     button {
-      margin-top: 20px;
+      margin: 10px;
       padding: 10px 20px;
     }
   </style>
 </head>
 <body>
+  <h2>The Great Warrior REDA</h2>
+  <canvas id="myRadarChart"></canvas>
 
-<h2>The great warrior REDA</h2>
+  <form id="statForm">
+    <label>Speed: <input type="number" id="speed" min="0" max="100" value="20" /></label>
+    <label>Stamina: <input type="number" id="stamina" min="0" max="100" value="30" /></label>
+    <label>Strength: <input type="number" id="strength" min="0" max="100" value="80" /></label>
+    <label>Intelligence: <input type="number" id="intelligence" min="0" max="100" value="90" /></label>
+    <label>Luck: <input type="number" id="luck" min="0" max="100" value="70" /></label>
+    <label>Charisma: <input type="number" id="charisma" min="0" max="100" value="30" /></label>
+    <br />
+    <button type="button" onclick="updateChart()">Update Chart</button>
+    <button type="button" onclick="saveCharacter()">Save Character</button>
+    <button type="button" onclick="loadCharacters()">Load Saved Characters</button>
+  </form>
 
-<canvas id="myRadarChart"></canvas>
+  <select id="characterList" onchange="loadSelectedCharacter()">
+    <option disabled selected>-- Select Saved Character --</option>
+  </select>
 
-<form id="statForm">
-  <label for="speed">Speed:</label>
-  <input type="number" id="speed" min="0" max="100" value="20" />
-
-  <label for="stamina">Stamina:</label>
-  <input type="number" id="stamina" min="0" max="100" value="30" />
-
-  <label for="strength">Strength:</label>
-  <input type="number" id="strength" min="0" max="100" value="80" />
-
-  <label for="intelligence">Intelligence:</label>
-  <input type="number" id="intelligence" min="0" max="100" value="90" />
-
-  <label for="luck">Luck:</label>
-  <input type="number" id="luck" min="0" max="100" value="70" />
-
-  <label for="charisma">Charisma:</label>
-  <input type="number" id="charisma" min="0" max="100" value="30" />
-</form>
-
-<button id="updateBtn">Update Stats</button>
-
-<script>
-  // Initial chart setup
-  const ctx = document.getElementById('myRadarChart').getContext('2d');
-
-  const radarChart = new Chart(ctx, {
-    type: 'radar',
-    data: {
-      labels: ['speed','stamina','strength','intelligence','luck','charisma'],
+  <script>
+    const statLabels = ['speed', 'stamina', 'strength', 'intelligence', 'luck', 'charisma'];
+    
+    const chartData = {
+      labels: statLabels,
       datasets: [{
         label: 'reda',
         data: [20, 30, 80, 90, 70, 30],
         backgroundColor: 'rgba(0, 123, 255, 0.2)',
-        borderColor: '#000000',
-        borderWidth: 1,
+        borderColor: '#000',
+        borderWidth: 1
       }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      scales: {
-        r: {
-          angleLines: { display: true },
-          suggestedMin: 0,
-          suggestedMax: 100
+    };
+
+    const radarChart = new Chart(document.getElementById('myRadarChart').getContext('2d'), {
+      type: 'radar',
+      data: chartData,
+      options: {
+        responsive: true,
+        maintainAspectRatio: true,
+        scales: {
+          r: {
+            angleLines: { display: true },
+            suggestedMin: 0,
+            suggestedMax: 100
+          }
         }
       }
+    });
+
+    function updateChart() {
+      const newData = statLabels.map(label => Number(document.getElementById(label).value));
+      radarChart.data.datasets[0].data = newData;
+      radarChart.update();
     }
-  });
 
-  // Handle update on button click
-  document.getElementById('updateBtn').addEventListener('click', () => {
-    // Get values from input fields
-    const stats = [
-      +document.getElementById('speed').value,
-      +document.getElementById('stamina').value,
-      +document.getElementById('strength').value,
-      +document.getElementById('intelligence').value,
-      +document.getElementById('luck').value,
-      +document.getElementById('charisma').value
-    ];
+    function saveCharacter() {
+      const character = {};
+      statLabels.forEach(label => {
+        character[label] = Number(document.getElementById(label).value);
+      });
 
-    // Update chart data
-    radarChart.data.datasets[0].data = stats;
-    radarChart.update(); // Refresh the chart
-  });
-</script>
+      fetch('/characters', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(character)
+      })
+      .then(res => res.json())
+      .then(data => alert("Character saved!"))
+      .catch(err => alert("Error saving character"));
+    }
 
+    function loadCharacters() {
+      fetch('/characters')
+        .then(res => res.json())
+        .then(data => {
+          const select = document.getElementById('characterList');
+          select.innerHTML = '<option disabled selected>-- Select Saved Character --</option>';
+          data.forEach((character, index) => {
+            const option = document.createElement('option');
+            option.value = index;
+            option.textContent = `Character #${index + 1}`;
+            select.appendChild(option);
+          });
+          window.savedCharacters = data;
+        });
+    }
+
+    function loadSelectedCharacter() {
+      const index = document.getElementById('characterList').value;
+      const character = window.savedCharacters[index];
+      statLabels.forEach(label => {
+        document.getElementById(label).value = character[label];
+      });
+      updateChart();
+    }
+  </script>
 </body>
 </html>

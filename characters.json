@@ -1,0 +1,40 @@
+[
+  {
+    "speed": 20,
+    "stamina": 30,
+    "strength": 80,
+    "intelligence": 90,
+    "luck": 70,
+    "charisma": 30
+  },
+  {
+    "speed": 90,
+    "stamina": 70,
+    "strength": 20,
+    "intelligence": 90,
+    "luck": 0,
+    "charisma": 90
+  },
+  {
+    "name": "reda",
+    "stats": {
+      "speed": 20,
+      "stamina": 30,
+      "strength": 80,
+      "intelligence": 90,
+      "luck": 70,
+      "charisma": 30
+    }
+  },
+  {
+    "name": "reda",
+    "stats": {
+      "speed": 20,
+      "stamina": 30,
+      "strength": 80,
+      "intelligence": 90,
+      "luck": 70,
+      "charisma": 30
+    }
+  }
+]
