@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Custom Radar Chart</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      background-color: #f0f0f0;
+      font-family: sans-serif;
+      text-align: center;
+    }
+    h2 { color: #333; }
+    #myRadarChart {
+      width: 600px !important;
+      height: 600px !important;
+      margin: auto;
+    }
+    form {
+      margin: 20px auto;
+      display: grid;
+      grid-template-columns: repeat(2, max-content);
+      gap: 10px;
+      justify-content: center;
+    }
+    label {
+      text-align: right;
+      padding-right: 5px;
+    }
+    input[type="number"] {
+      width: 60px;
+    }
+    button {
+      margin-top: 20px;
+      padding: 10px 20px;
+    }
+  </style>
+</head>
+<body>
+
+<h2>The great warrior REDA</h2>
+
+<canvas id="myRadarChart"></canvas>
+
+<form id="statForm">
+  <label for="speed">Speed:</label>
+  <input type="number" id="speed" min="0" max="100" value="20" />
+
+  <label for="stamina">Stamina:</label>
+  <input type="number" id="stamina" min="0" max="100" value="30" />
+
+  <label for="strength">Strength:</label>
+  <input type="number" id="strength" min="0" max="100" value="80" />
+
+  <label for="intelligence">Intelligence:</label>
+  <input type="number" id="intelligence" min="0" max="100" value="90" />
+
+  <label for="luck">Luck:</label>
+  <input type="number" id="luck" min="0" max="100" value="70" />
+
+  <label for="charisma">Charisma:</label>
+  <input type="number" id="charisma" min="0" max="100" value="30" />
+</form>
+
+<button id="updateBtn">Update Stats</button>
+
+<script>
+  // Initial chart setup
+  const ctx = document.getElementById('myRadarChart').getContext('2d');
+
+  const radarChart = new Chart(ctx, {
+    type: 'radar',
+    data: {
+      labels: ['speed','stamina','strength','intelligence','luck','charisma'],
+      datasets: [{
+        label: 'reda',
+        data: [20, 30, 80, 90, 70, 30],
+        backgroundColor: 'rgba(0, 123, 255, 0.2)',
+        borderColor: '#000000',
+        borderWidth: 1,
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        r: {
+          angleLines: { display: true },
+          suggestedMin: 0,
+          suggestedMax: 100
+        }
+      }
+    }
+  });
+
+  // Handle update on button click
+  document.getElementById('updateBtn').addEventListener('click', () => {
+    // Get values from input fields
+    const stats = [
+      +document.getElementById('speed').value,
+      +document.getElementById('stamina').value,
+      +document.getElementById('strength').value,
+      +document.getElementById('intelligence').value,
+      +document.getElementById('luck').value,
+      +document.getElementById('charisma').value
+    ];
+
+    // Update chart data
+    radarChart.data.datasets[0].data = stats;
+    radarChart.update(); // Refresh the chart
+  });
+</script>
+
+</body>
+</html>
