@@ -44,5 +44,13 @@
     "intelligence": 90,
     "luck": 70,
     "charisma": 30
+  },
+  {
+    "speed": 20,
+    "stamina": 30,
+    "strength": 80,
+    "intelligence": 90,
+    "luck": 70,
+    "charisma": 30
   }
 ]
